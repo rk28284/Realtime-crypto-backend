@@ -11,7 +11,7 @@ app.use(cors());
 //user route
 
 const userRouter = require("./route/user.routes");
-const tradeRouter = require("./route/trade.routes");
+const leadRouter = require("./route/lead.routes");
 
 
 app.get("/", (req, res) => {
@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
 
 })
 app.use("/", userRouter);
-app.use("/", tradeRouter);
+app.use("/", leadRouter);
 
 app.listen(PORT, async () => {
   console.log("Realtime Crypto Backend Is Runing");
