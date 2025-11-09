@@ -1,17 +1,24 @@
 const express = require("express");
-const tradeRouter = express.Router();
+const leadRouter = express.Router();
 const {
-  getAllTrades,
-  getTradeById,
-} = require("../controllers/trade.controller");
+  createLead,
+  getLeads,
+  updateLead,
+  deleteLead
+} = require("../controllers/lead.controller");
 
 
-// Get all trades
-tradeRouter.get("/trade", getAllTrades);
+// Get all leads
+leadRouter.get("/lead", getLeads);
 
-// Get a single trade by ID
-tradeRouter.get("/trade/:id", getTradeById);
+// Create a new lead
+leadRouter.post("/lead", createLead);
+
+// Update an existing lead
+leadRouter.put("/lead/:id", updateLead);
+
+// Delete a lead
+leadRouter.delete("/lead/:id", deleteLead);
 
 
-
-module.exports = tradeRouter;
+module.exports = leadRouter;

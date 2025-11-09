@@ -1,34 +1,53 @@
-const tradeModel = require("../model/trade.model");
+const leadModel = require("../model/lead.model");
 
-
-// Get all trades
-const getAllTrades = async (req, res) => {
+const createLead = async (req, res) => {
   try {
-    const trades = await tradeModel.find();
-    res.status(200).json(trades);
+    const lead = await leadModel.create({
+      ...req.body,
+      owner: req.user.id,
+      history: [{ updatedBy: req.user.id, action: "Created" }],
+    });
+    res.status(201).json(lead);
   } catch (error) {
     res.status(500).json({ message: "Server Error", error });
   }
 };
 
-// Get a single trade by ID
-const getTradeById = async (req, res) => {
+const getLeads = async (req, res) => {
   try {
-    const trade = await tradeModel.findById(req.params.id);
-    if (!trade) return res.status(404).json({ message: "Trade not found" });
-    res.status(200).json(trade);
+    const leads = await leadModel.find().populate("owner");
+    res.json(leads);
   } catch (error) {
     res.status(500).json({ message: "Server Error", error });
   }
 };
 
+const updateLead = async (req, res) => {
+  try {
+    const lead = await leadModel.findById(req.params.id);
+    if (!lead) return res.status(404).json({ message: "Lead not found" });
+    Object.assign(lead, req.body);
+    lead.history.push({ updatedBy: req.user.id, action: "Updated" });
+    await lead.save();
+    res.json(lead);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
 
-
-
+const deleteLead = async (req, res) => {
+  try {
+    const lead = await leadModel.findByIdAndDelete(req.params.id);
+    if (!lead) return res.status(404).json({ message: "Lead not found" });
+    res.json({ message: "Lead deleted" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
 module.exports = {
- 
-  getAllTrades,
-  getTradeById,
- 
+  createLead,
+  getLeads,
+  updateLead,
+  deleteLead,
 };
